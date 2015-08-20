@@ -108,6 +108,7 @@ abstract class BenchmarkBase
             }
             else if (params.dataFileName == null) {
                 params.dataFileName = arg;
+                System.out.println("Data file name: " + arg);
                 continue;
             }
             else {
@@ -134,6 +135,7 @@ abstract class BenchmarkBase
                     System.err.println("The \"include\" option requires a value.");
                     System.exit(1);
                 }
+                System.out.println("include: " + value);
                 if (params.filterIsInclude == null) {
                     params.filterIsInclude = true;
                     params.filterStrings = new HashSet<String>(Arrays.asList(value.split(",")));
@@ -161,6 +163,7 @@ abstract class BenchmarkBase
                     System.exit(1);
                 }
                 try {
+                	System.out.println("Iterations: " + value);
                     params.iterations = Integer.parseInt(value);
                 } catch (NumberFormatException ex) {
                     System.err.println("Invalid value for \"iterations\" option: \"" + value + "\"");
@@ -177,6 +180,7 @@ abstract class BenchmarkBase
                     System.exit(1);
                 }
                 try {
+                	System.out.println("Test run in mills: " + value);
                     params.testRunMillis = Integer.parseInt(value);
                 } catch (NumberFormatException ex) {
                     System.err.println("Invalid value for \"testRunMillis\" option: \"" + value + "\"");
@@ -275,6 +279,7 @@ abstract class BenchmarkBase
             System.out.println("Data file \"" + dataFile.getName() + "\" should be of the form \"<type>.<name>.<extension>\"");
             System.exit(1);
         }
+        System.out.println("Data file parts (type-extra-extension): " + parts[0] + " -- " + parts[1] + " -- " + parts[parts.length-1]);
         params.dataType = parts[0];
         params.dataExtra = parts[1];
         params.dataExtension = parts[parts.length-1];
