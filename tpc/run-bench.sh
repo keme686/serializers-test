@@ -3,8 +3,8 @@ set -e
 
 raw_result_dir="results/raw"
 
-mem=-Xmx256m
-clz=serializers.BenchmarkRunner
+mem=-Xmx8g 
+clz=serializers.MediaStreamBenchmark
 
 cpgen=$(cat build/gen-cp)
 cplib=$(cat build/lib-cp)
@@ -46,7 +46,7 @@ do
     file=$word-result.txt
     file="$raw_result_dir"/${file//\//-}  # change '/' to '-'
     echo $word > $file
-    java $mem -cp $cp $clz -iterations=$iter -warmup-time=$warmupTime -testRunMillis=$testTime -include=$word data/media.1.cks >> $file
+    java $mem -d64 -cp $cp $clz -iterations=$iter -warmup-time=$warmupTime -testRunMillis=$testTime -include=$word data-stream/media.100.cks >> $file
 done
 
 # find files with no numbers => errors

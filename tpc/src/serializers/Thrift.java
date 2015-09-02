@@ -44,13 +44,13 @@ public class Thrift
 	{
 		public final TProtocolFactory factory;
 		public final String suffix;
-
+		
 		public ProtocolSpec(TProtocolFactory factory, String suffix)
 		{
 			this.factory = factory;
 			this.suffix = suffix;
 		}
-
+		
 		public static final ProtocolSpec DefaultBinary = new ProtocolSpec(new TBinaryProtocol.Factory(), "");
 		public static final ProtocolSpec CompactBinary = new ProtocolSpec(new TCompactProtocol.Factory(), "-compact");
 	}

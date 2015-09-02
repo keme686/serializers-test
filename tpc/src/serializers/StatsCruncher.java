@@ -73,12 +73,12 @@ public class StatsCruncher {
             }
             TestCaseResult res = new TestCaseResult();
             res.setName(split[0].trim());
-            res.setCreate(Integer.parseInt(split1.trim()));
-            res.setSer(Integer.parseInt(split[2].trim()));
-            res.setDeser(Integer.parseInt(split[3].trim()));
-            res.setTotal(Integer.parseInt(split[4].trim()));
-            res.setSize(Integer.parseInt(split[5].trim()));
-            res.setCompressedSize(Integer.parseInt(split[6].trim()));
+            res.setCreate(Long.parseLong(split1.trim()));
+            res.setSer(Long.parseLong(split[2].trim()));
+            res.setDeser(Long.parseLong(split[3].trim()));
+            res.setTotal(Long.parseLong(split[4].trim()));
+            res.setSize(Long.parseLong(split[5].trim()));
+            res.setCompressedSize(Long.parseLong(split[6].trim()));
             mappedResults.put(res.getName(), res);
             res.setFeatures(mappedFeatures.get(res.getName()));
             results.add(res);
@@ -87,39 +87,39 @@ public class StatsCruncher {
         return results;
     }
 
-    public int max(List<TestCaseResult> resultList, String arg, int elems) {
-        int max = Integer.MIN_VALUE;
+    public long max(List<TestCaseResult> resultList, String arg, int elems) {
+        long max = Integer.MIN_VALUE;
         for (int i = 0; i < Math.min(elems,resultList.size()); i++) {
             TestCaseResult testCaseResult = resultList.get(i);
-            max = Math.max(testCaseResult.getInt(arg),max);
+            max = Math.max(testCaseResult.getLong(arg),max);
         }
         return max;
     }
     
-    public int min(List<TestCaseResult> resultList, String arg) {
-        int min = Integer.MAX_VALUE;
+    public long min(List<TestCaseResult> resultList, String arg) {
+        long min = Integer.MAX_VALUE;
         for (int i = 0; i < resultList.size(); i++) {
             TestCaseResult testCaseResult = resultList.get(i);
-            min = Math.min(testCaseResult.getInt(arg),min);
+            min = Math.min(testCaseResult.getLong(arg),min);
         }
         return min;
     }
 
     public String generateChart(List<TestCaseResult> resultList, String title, String lowerValueName, String higherValueName) {
         int chartSize = Math.min(MAX_CHART_BARS, resultList.size() ); // more bars aren't possible with gcharts
-        int max = max(resultList, higherValueName, MAX_CHART_BARS);
+        long max = max(resultList, higherValueName, MAX_CHART_BARS);
         String res = "https://chart.googleapis.com/chart?cht=bhs&chs=600x"+(chartSize *20+14); // html: finally a device independent technology
 //        res+="&chtt="+URLEncoder.encode(title);
         res+="&chd=t:";
         for (int i = 0; i < chartSize; i++) {
             TestCaseResult testCaseResult = resultList.get(i);
-            int val = testCaseResult.getInt(lowerValueName);
+            long val = testCaseResult.getLong(lowerValueName);
             res+= val +((i< chartSize -1) ? ",":"|");
         }
         for (int i = 0; i < chartSize; i++) {
             TestCaseResult testCaseResult = resultList.get(i);
-            int valLower = (testCaseResult.getInt(lowerValueName));
-            int val = testCaseResult.getInt(higherValueName);
+            long valLower = (testCaseResult.getLong(lowerValueName));
+            long val = testCaseResult.getLong(higherValueName);
             val -= valLower;
             res+=val+((i< chartSize -1) ? ",":"");
         }
@@ -193,10 +193,10 @@ public class StatsCruncher {
         }
         
         // process rangeDiff and maxLen
-        int min = min(chartList,intFieldToSort);
+        long min = min(chartList,intFieldToSort);
         for (int i = 0; i < chartList.size(); i++) {
             TestCaseResult testCaseResult = chartList.get(i);
-            if ( min * maxRangeDiff < testCaseResult.getInt(intFieldToSort) || i >= maxListLen )
+            if ( min * maxRangeDiff < testCaseResult.getLong(intFieldToSort) || i >= maxListLen )
                 chartList.remove(i--);
         }
         return chartList;
@@ -207,7 +207,7 @@ public class StatsCruncher {
         Collections.sort(res, new Comparator<TestCaseResult>() {
             @Override
             public int compare(TestCaseResult o1, TestCaseResult o2) {
-                return o1.getInt(intFieldToSort) - o2.getInt(intFieldToSort);
+                return (int)(o1.getLong(intFieldToSort) - o2.getLong(intFieldToSort));
             }
         });
         return res;
@@ -417,18 +417,18 @@ public class StatsCruncher {
 
     static class TestCaseResult {
         String name;
-        int create;
-        int ser;
-        int deser;
-        int total;
-        int size;
-        int compressedSize;
+        long create;
+        long ser;
+        long deser;
+        long total;
+        long size;
+        long compressedSize;
         SerFeatures features = new SerFeatures();
 
         TestCaseResult() {
         }
 
-        TestCaseResult(String name, int create, int ser, int deser, int total, int size, int compressedSize) {
+        TestCaseResult(String name, long create, long ser, long deser, long total, long size, long compressedSize) {
             this.name = name;
             this.create = create;
             this.ser = ser;
@@ -446,11 +446,11 @@ public class StatsCruncher {
             this.features = features;
         }
 
-        public int getInt(String name) {
+        public long getLong(String name) {
             try {
                 final Field f = TestCaseResult.class.getDeclaredField(name);
                 f.setAccessible(true);
-                return f.getInt(this);
+                return f.getLong(this);
             } catch (IllegalAccessException e) {
                 e.printStackTrace();
             } catch (NoSuchFieldException e) {
@@ -481,51 +481,51 @@ public class StatsCruncher {
             this.name = name;
         }
 
-        public int getCreate() {
+        public long getCreate() {
             return create;
         }
 
-        public void setCreate(int create) {
+        public void setCreate(long create) {
             this.create = create;
         }
 
-        public int getSer() {
+        public long getSer() {
             return ser;
         }
 
-        public void setSer(int ser) {
+        public void setSer(long ser) {
             this.ser = ser;
         }
 
-        public int getDeser() {
+        public long getDeser() {
             return deser;
         }
 
-        public void setDeser(int deser) {
+        public void setDeser(long deser) {
             this.deser = deser;
         }
 
-        public int getTotal() {
+        public long getTotal() {
             return total;
         }
 
-        public void setTotal(int total) {
+        public void setTotal(long total) {
             this.total = total;
         }
 
-        public int getSize() {
+        public long getSize() {
             return size;
         }
 
-        public void setSize(int size) {
+        public void setSize(long size) {
             this.size = size;
         }
 
-        public int getCompressedSize() {
+        public long getCompressedSize() {
             return compressedSize;
         }
 
-        public void setCompressedSize(int compressedSize) {
+        public void setCompressedSize(long compressedSize) {
             this.compressedSize = compressedSize;
         }
 
