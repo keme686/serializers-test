@@ -16,7 +16,7 @@ Parameters of the default run are hardcoded in run-bench.sh
 
 To update results of subset of serializers
 
-  bash run-bench.sh serializer1,serializer2,..
+  bash run-bench.sh protobuf,thrift,thrift-compact
   
 How this works:
   
